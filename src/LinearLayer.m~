@@ -1,0 +1,36 @@
+classdef LinearLayer < Module
+ % write a description of the class here.
+properties
+     input
+     output
+     params
+end
+
+methods
+    function L = LinearLayer(numin, numout, options)
+          L.name = 'DenseLinearLayer';
+	  L.params = 0.01/sqrt(numin)*randn(numout, numin);
+	  L.backward = @backprop;
+    end
+
+    function output = forward(self, input)
+      output = L.params*input;
+    end
+
+    function grad = backward(self, dfdo)
+      dLdin = L.params' * dLdout;
+      dparams = dLdout * L.input';
+    end
+
+    % convert parameters describing this module to a vector
+    % so we can have one optimization interface
+    function [X] = getparams(self)
+      X = reshape(self.params, [], 1);
+    end
+
+    function setparams(self, X)
+      self.params = reshape(X, );
+    end
+end
+
+end
