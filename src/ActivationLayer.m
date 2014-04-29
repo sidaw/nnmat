@@ -7,8 +7,6 @@ end
 
 methods
     function L = ActivationLayer(numin, actname, options)
-    
-
       L.name = ['ActivationLayer-' actname];
       L.actfunc = actfuncs(actname);
       L.actgrad = actgrads(actname);
