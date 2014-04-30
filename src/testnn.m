@@ -1,7 +1,13 @@
-dimdata =  200;
+addpath(genpath('utils'))
+
+datapath = '~/data/mnisty/affnist_mat.mat';
+load(datapath)
+
+dimdata =  batchdata;
 numhid = 250;
 numclass = 10;
 numdata = 10;
+
 L = {};
 L{1} = LinearLayer(dimdata, numhid);
 L{2} = ActivationLayer(numhid, 'sigmoid');

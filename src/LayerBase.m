@@ -1,4 +1,4 @@
-classdef Module < handle
+classdef LayerBase < handle
  % write a description of the class here.
 properties
      input
@@ -7,32 +7,33 @@ properties
 % whereas the functions for getting and setting params and grad should always convert these to vectors so that we have a uniform optimization routine
      params
      grad
-
      name
 end
 
 methods
     function output = forward(self, input)
-      output = input;
+      self.output = input;
+      output = self.output;
     end
 
     function grad = backward(self, dfdo)
-      grad = dfdo;
+      self.grad = dfdo;
+      grad = self.grad;
     end
 
     % convert parameters describing this module to a vector
+    % so we can have one optimization interface
     function [X] = getparams(self)
-      X = self.params;
+      X = self.params(:);
     end
 
     function setparams(self, X)
-      self.params = X;
+      self.params(:) = X;
     end
 
-    function grad=getgrad(self)
-      grad = [];
+    function [grad] = getgrad(self)
+      grad = self.grad(:);
     end
-
 end
 
 end

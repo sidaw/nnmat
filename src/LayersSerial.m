@@ -1,4 +1,4 @@
-classdef Sequential < Module
+classdef LayersSerial < LayerBase
  % write a description of the class here.
 properties
     layers
@@ -6,7 +6,7 @@ properties
 end
 
 methods
-    function L = Sequential(varargin)
+    function L = LayersSerial(varargin)
       L.layers = varargin;
     end
 
@@ -39,8 +39,10 @@ methods
     function setparams(self, X)
       start = 1;
       for i = 1:length(self.layers)
-        self.layers{i}.setparams(X( start:self.decodeinfo(i) ));
-        start = self.decodeinfo(i)+1;
+        if self.decodeinfo(i) >= start
+            self.layers{i}.setparams(X( start:self.decodeinfo(i) ));
+            start = self.decodeinfo(i)+1;
+        end
       end
     end
 
