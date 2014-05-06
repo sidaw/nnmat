@@ -8,23 +8,25 @@ numhid = 1024;
 numclass = 10;
 numdata = 60000;
 numhid2 = 1024;
+droprate = 0;
+dropdatarate = 0;
 
 L = {};
-L{end+1} = LayerNoising(0.3);
+L{end+1} = LayerNoising(droprate);
 L{end+1} = LayerLinear(dimdata, numhid);
 L{end+1} = LayerActivation(numhid, 'relu');
-L{end+1} = LayerNoising(0.5);
+L{end+1} = LayerNoising(droprate);
 L{end+1} = LayerLinear(numhid, numhid2);
 L{end+1} = LayerActivation(numhid, 'relu');
-L{end+1} = LayerNoising(0.5);
+L{end+1} = LayerNoising(droprate);
 L{end+1} = LayerLinear(numhid2, numclass);
 L{end+1} = LayerActivation(numclass, 'logsoftmax');
 nn = LayersSerial(L{:});
 
-X = X(1:dimdata, 1:numdata);
-y = y(:, 1:numdata);
+X = gpuArray(X(1:dimdata, 1:numdata));
+y = gpuArray(y(:, 1:numdata)));
 
-params = nn.getparams();
+params = gpuArray(nn.getparams());
 
 minibatchlossfunc = @(params, X, y) BatchLossFunction(params, X, y, nn, 'nll_logprob');
 
