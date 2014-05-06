@@ -24,7 +24,7 @@ L{end+1} = LayerActivation(numclass, 'logsoftmax');
 nn = LayersSerial(L{:});
 
 X = gpuArray(X(1:dimdata, 1:numdata));
-y = gpuArray(y(:, 1:numdata)));
+y = gpuArray(y(:, 1:numdata));
 
 params = gpuArray(nn.getparams());
 
