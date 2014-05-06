@@ -4,7 +4,7 @@
 % the gradfunc states how to backpropagate through each particular
 % activation
 
-function [actfunc, gradfunc] = getActivation(name)
+function [actfunc, gradfunc] = getActivation(name, options)
 switch name
     % simple activations, where y_i = f(x_i) independent of x_j
     case 'sigmoid'
