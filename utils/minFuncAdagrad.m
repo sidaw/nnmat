@@ -2,7 +2,7 @@ function [w, finalObj] = minFuncAdagrad(funObj,  W, X, y, options)
 eta = options.eta;
 w = W;
 numdata = size(X,1);
-G = 1e-10*ones(size(W));
+G = 1e-5*ones(size(W));
 fprintf('Batchsize:%d\tMaxIter:%d\tNumdata:%d\n', ...
     options.BatchSize, options.MaxIter, numdata)
 for t = 1:options.MaxIter

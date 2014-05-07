@@ -28,7 +28,7 @@ methods
     end
 
     function setparams(self, X)
-      self.params(:) = X;
+      self.params = reshape(X, size(self.params));
     end
 
     function [grad] = getgrad(self)

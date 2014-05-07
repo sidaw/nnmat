@@ -5,6 +5,7 @@ properties
     gradfunc
     state
     droprate
+    testing
 end
 
 methods
@@ -12,13 +13,19 @@ methods
       L.name = ['Noising'];
       L.droprate = droprate;
       L.params = [];
+      L.testing = 0;
     end
 
     function output=forward(self, input)
       self.input = input;
-      self.state = rand(size(input))>self.droprate;
-      self.output = self.state.*input;
-      output=self.output;
+      if ~self.testing
+	self.state = rand(size(input))>self.droprate;
+	self.output = self.state.*input;
+	output=self.output;
+      else	
+	self.output = self.droprate*input;
+	output=self.output;      
+      end
     end
 
     function dLdin = backward(self, dfdo)
