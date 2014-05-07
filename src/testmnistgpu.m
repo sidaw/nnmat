@@ -4,10 +4,10 @@ datapath = '~/data/mnisty/';
 load([datapath 'mnist.mat'])
 
 dimdata =  784;
-numhid = 2048;
+numhid = 1024;
 numclass = 10;
 numdata = 60000;
-numhid2 = 2048;
+numhid2 = 1024;
 droprate = 0.5;
 datadroprate = 0.3;
 

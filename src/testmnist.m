@@ -34,7 +34,7 @@ options.MaxIter = 1000;
 options.eta = 1e-2;
 options.PermuteData = 1;
 options.RowMajor = 0;
-paramsopt = minFuncsd(minibatchlossfunc, params, X, y, options);
+paramsopt = minFuncAdagrad(minibatchlossfunc, params, X, y, options);
 
 [~, trainpreds] = max(nn.forward(X),[],1);
 [~, trainlabels] = max(y,[],1);
