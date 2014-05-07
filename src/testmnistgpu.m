@@ -3,6 +3,14 @@ addpath(genpath('../utils'))
 datapath = '~/data/mnisty/';
 load([datapath 'mnist.mat'])
 
+if ~testToolboxes('Parallel Computing Toolbox')
+    castfunc = @(x) single(x);
+    disp('No parallel computing toolbox')
+else
+    castfunc = @(x) gpuArray(single(x));
+    disp('Using the GPU');
+end
+    
 dimdata =  784;
 numhid = 1024;
 numclass = 10;
@@ -26,16 +34,16 @@ L{end+1} = LayerLinear(numhid2, numclass);
 L{end+1} = LayerActivation(numclass, 'logsoftmax');
 nn = LayersSerial(L{:});
 
-X = gpuArray(X(1:dimdata, 1:numdata));
-y = gpuArray(y(:, 1:numdata));
-params = gpuArray(nn.getparams());
+X = castfunc(X(1:dimdata, 1:numdata));
+y = castfunc(y(:, 1:numdata));
+params = castfunc(nn.getparams());
 
 minibatchlossfunc = @(params, X, y) BatchLossFunction(params, X, y, nn, 'nll_logprob');
 batchlossfunc = @(params) BatchLossFunction(params, X, y, nn, 'nll_logprob');
 
 options.DerivativeCheck = 0;
 options.BatchSize = 100;
-options.MaxIter = 2000;
+options.MaxIter = 10;
 options.eta = 1e-2;
 options.PermuteData = 1;
 options.RowMajor = 0;
