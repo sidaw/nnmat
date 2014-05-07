@@ -39,7 +39,7 @@ options.MaxIter = 2000;
 options.eta = 1e-2;
 options.PermuteData = 1;
 options.RowMajor = 0;
-paramsopt = minFuncsd(minibatchlossfunc, params, X, y, options);
+paramsopt = minFuncAdagrad(minibatchlossfunc, params, X, y, options);
 
 %paramsopt = minFunc(batchlossfunc, params, options);
 
