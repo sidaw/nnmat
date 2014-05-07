@@ -21,15 +21,15 @@ datadroprate = 0.3;
 
 L = {};
 noise1 = LayerNoising(datadroprate);
-L{end+1} = noise1;
+% L{end+1} = noise1;
 L{end+1} = LayerLinear(dimdata, numhid);
 L{end+1} = LayerActivation(numhid, 'relu');
 noise2 = LayerNoising(droprate);
-L{end+1} = noise2;
+% L{end+1} = noise2;
 L{end+1} = LayerLinear(numhid, numhid2);
 L{end+1} = LayerActivation(numhid, 'relu');
 noise3 = LayerNoising(droprate);
-L{end+1} = noise3;
+% L{end+1} = noise3;
 L{end+1} = LayerLinear(numhid2, numclass);
 L{end+1} = LayerActivation(numclass, 'logsoftmax');
 nn = LayersSerial(L{:});
@@ -42,7 +42,7 @@ minibatchlossfunc = @(params, X, y) BatchLossFunction(params, X, y, nn, 'nll_log
 batchlossfunc = @(params) BatchLossFunction(params, X, y, nn, 'nll_logprob');
 
 options.DerivativeCheck = 0;
-options.BatchSize = 100;
+options.BatchSize = 50;
 options.MaxIter = 10;
 options.eta = 1e-2;
 options.PermuteData = 1;
