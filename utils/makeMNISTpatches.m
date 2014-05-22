@@ -6,7 +6,10 @@ Xtest = loadMNISTImages([datapath 't10k-images-idx3-ubyte']);
 ytestraw = loadMNISTLabels([datapath 't10k-labels-idx1-ubyte']);
 ytest = to1ofk(ytestraw)';
 
-Xpatch = im2patch(X, [28,28], [8,8], 4);
-Xtestpatch = im2patch(Xtest, [28,28], [8,8], 4);
+sizepatch = [8, 8];
+sizestride = 4;
 
-save([datapath 'mnistpatch.mat'], 'Xpach', 'y', 'Xtestpach', 'ytest');
+Xpatch = im2patch(X, [28,28], sizepatch, sizestride);
+Xtestpatch = im2patch(Xtest, [28,28], sizepatch, sizestride);
+
+save([datapath 'mnistpatch.mat'], 'Xpatch', 'y', 'Xtestpatch', 'ytest');
