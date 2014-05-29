@@ -1,4 +1,4 @@
-function [w, finalObj] = minFuncAdagrad(funObj,  W, X, y, options, funcStat)
+function [w, finalObj] = minFuncExpAdaptSignGrad(funObj,  W, X, y, options, funcStat)
 % accepts only column major data as it should be in matlab
 % that is, each data point occupies a single column
 if nargin < 6
@@ -11,6 +11,11 @@ numdata = size(X,2);
 G = 1e-5*ones(size(W));
 fprintf('Batchsize:%d\tMaxIter:%d\tNumdata:%d\n', ...
     options.BatchSize, options.MaxIter, numdata)
+
+rate = ones(size(W));
+prevsign = zeros(size(W));
+adaptrate = 1.1;
+decayrate = 2;
 for t = 1:options.MaxIter
     batchobj = 0;
     %rng(1)
@@ -25,10 +30,15 @@ for t = 1:options.MaxIter
         [finalObj, g] = funObj(w,X(:, select), y(:, select));
         
         batchobj = batchobj + finalObj;
-        G = G + g.^2;
-        % we do not need to divide by batchsize here, as this is already
-        % normalized
-        w = w - eta*g./sqrt(G);
+        
+        signg = sign(g);
+        w = w - eta * signg.* rate;
+        signchanged = (prevsign&signg) & (prevsign ~= signg);
+        signunchanged = (prevsign .* signg) == -1;
+        rate(signchanged) = rate(signchanged) / decayrate;
+        rate(signunchanged) = rate(signunchanged) * adaptrate;
+        
+        prevsign = signg;
         
     end
     statstring = funcStat(w);
