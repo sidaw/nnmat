@@ -16,7 +16,7 @@ numpatchhid = 16;
 
 numhid = 800;
 numclass = 10;
-numdata = 60000;
+numdata = 600;
 droprate = 0.5;
 
 L = {};
@@ -60,7 +60,7 @@ options.eta = 1e-2;
 options.PermuteData = 0;
 
 statfunc = @(w) getTestAcc(w, nn, Xtest, ytest);
-paramsopt = minFuncAdagrad(minibatchlossfunc, paramsopt, X, y, options, statfunc);
+paramsopt = minFuncAdagrad(minibatchlossfunc, params, X, y, options, statfunc);
 
 %paramsopt = minFunc(batchlossfunc, params, options);
 % noise.testing = 1;

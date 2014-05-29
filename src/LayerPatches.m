@@ -16,11 +16,8 @@ classdef LayerPatches < LayerBase
         function output=forward(self, input)
             self.input = input;
             [patchdim, numpatch, sizebatch] = size(input);
-            output = zeros(self.numout, numpatch, sizebatch);
-            
-            for i = 1:sizebatch
-               output(:,:, i) = self.params * input(:,:,i);
-            end
+            flatinput = reshape(input, patchdim, []);
+            output = reshape(self.params * flatinput, self.numout, numpatch, sizebatch);
             
             self.output = output;
         end
@@ -28,13 +25,16 @@ classdef LayerPatches < LayerBase
         % some of this can probably be made much faster
         function dLdin = backward(self, dLdout)
             [outdim, numpatch, sizebatch] = size(dLdout);
+            flatdLdout = reshape(dLdout, outdim, []);
             
             grad = zeros(self.numout, self.numin);
-            dLdin = zeros(self.numin, numpatch, sizebatch);
-            for i = 1:sizebatch
-               grad = grad + dLdout(:,:,i) * self.input(:,:,i)';
-               dLdin(:,:,i) = self.params' * dLdout(:,:,i);
-            end
+            
+            dLdin = reshape(self.params' * flatdLdout, self.numin, numpatch, sizebatch);
+            %dLdin = zeros(self.numin, numpatch, sizebatch);
+            
+            flatinput = reshape(self.input, self.numin, []);
+            grad = flatdLdout * flatinput';
+            
             self.grad = grad;
         end
     end
