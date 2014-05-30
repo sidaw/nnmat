@@ -1,14 +1,16 @@
-classdef LayersSerial < LayerBase
- % write a description of the class here.
+classdef LayersFork < LayerBase
+ % apply each of the containing layer to the same input, producing a
+ % concatenated ouput
+ % all layers should take the same input
 properties
     layers
     decodeinfo
 end
 
 methods
-    function L = LayersSerial(varargin)
+    function L = LayersFork(varargin)
       if length(varargin) == 1
-          warning('No need to use LayersSerial if it only contains one element')
+          warning('No need to use LayersFork if it only contains one element')
           if iscell(varagin{1})
               warning('attempting to use first item as the list')
               varargin = varagin{1};

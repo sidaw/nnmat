@@ -1,4 +1,5 @@
 addpath(genpath('../utils'))
+addpath(genpath('.'))
 
 datapath = '~/data/mnisty/';
 load([datapath 'mnist.mat'])
@@ -16,28 +17,25 @@ numpatchhid = 16;
 
 numhid = 800;
 numclass = 10;
-numdata = 600;
+numdata = 60000;
 droprate = 0.5;
 
+pfopts.sizeimg = [28, 28]; pfopts.sizepatch = [8,8]; pfopts.sizestride = 2;
+pfopts.numhid = [300]; pfopts.numhid2 = [50]; ptopts.numpose = 10;
+[LayerPatchFeaturize info] = getLayerPatchFeaturize(pfopts);
+
 L = {};
-patchgen = LayerImage2Patch([28, 28], [4 4], 1);
-patchlayer = LayerPatches(patchgen.dimpatches, numpatchhid, patchgen.numpatches);
-patchact = LayerActivation(numpatchhid, 'relu');
-patch2flat = LayerFlattenPatches(numpatchhid, patchgen.numpatches);
 
-L{end+1} = patchgen;
-L{end+1} = patchlayer;
-L{end+1} = patchact;
-L{end+1} = patch2flat;
-
-L{end+1} = LayerLinear(patch2flat.dimout, numhid);
-L{end+1} = LayerActivation(numhid, 'relu');
+% the fully connected layers
+L{end+1} = LayerPatchFeaturize;
+% L{end+1} = LayerLinear(info.numout, numhid);
+% L{end+1} = LayerActivation(numhid, 'relu');
 
 % noise = LayerNoising(droprate);
 % noise.fixedmask = 0;
 % L{end+1} = noise;
 
-L{end+1} = LayerLinear(numhid, numclass);
+L{end+1} = LayerLinear(info.numout, numclass);
 L{end+1} = LayerActivation(numclass, 'logsoftmax');
 nn = LayersSerial(L{:});
 
@@ -50,13 +48,14 @@ X = castfunc(X(1:dimdata, 1:numdata));
 y = castfunc(y(:, 1:numdata));
 params = castfunc(nn.getparams());
 
-minibatchlossfunc = @(params, X, y) BatchLossFunction(params, X, y, nn, 'nll_logprob');
+optsloss.lambdaL2 = 1e-3;
+minibatchlossfunc = @(params, X, y) BatchLossFunction(params, X, y, nn, 'nll_logprob', optsloss);
 batchlossfunc = @(params) BatchLossFunction(params, X, y, nn, 'nll_logprob');
 
 options.DerivativeCheck = 0;
 options.BatchSize = 100;
-options.MaxIter = 10;
-options.eta = 1e-2;
+options.MaxIter = 30;
+options.eta = 5e-2;
 options.PermuteData = 0;
 
 statfunc = @(w) getTestAcc(w, nn, Xtest, ytest);
@@ -64,12 +63,13 @@ paramsopt = minFuncAdagrad(minibatchlossfunc, params, X, y, options, statfunc);
 
 %paramsopt = minFunc(batchlossfunc, params, options);
 % noise.testing = 1;
-[~, trainpreds] = max(nn.forward(X),[],1);
-[~, trainlabels] = max(y,[],1);
-trainacc = mean(trainlabels == trainpreds);
+% [~, trainpreds] = max(nn.forward(X),[],1);
+% [~, trainlabels] = max(y,[],1);
+% trainacc = mean(trainlabels == trainpreds);
 
+tic
 [~, testpreds] = max(nn.forward(Xtest),[],1);
 [~, testlabels] = max(ytest,[],1);
 testacc = mean(testlabels == testpreds);
-
-disp([trainacc testacc])
+testtime = toc;
+fprintf('testacc=%f\t time=%f', testacc, testtime)

@@ -1,0 +1,15 @@
+function LayerPatchFeaturize = getLayerPatchFeaturize(options)
+
+patchgen = LayerImage2Patch([28, 28], [4 4], 1);
+patchlayer = LayerPatches(patchgen.dimpatches, numpatchhid, patchgen.numpatches);
+patchact = LayerActivation(numpatchhid, 'relu');
+patch2flat = LayerFlattenPatches(numpatchhid, patchgen.numpatches);
+
+Lfeatures = {};
+Lfeatures{end+1} = patchgen;
+Lfeatures{end+1} = patchlayer;
+Lfeatures{end+1} = patchact;
+Lfeatures{end+1} = patch2flat;
+LayerPatchFeaturize = LayerSerial(Lfeatures);
+
+end

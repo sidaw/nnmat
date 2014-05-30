@@ -13,7 +13,7 @@ classdef LayerImage2Patch < LayerBase
 
     methods
         function self = LayerImage2Patch(imsize, block, step, options)
-            self.blockindices = getPatchIndex(imsize, block, step);
+            self.blockindices = uint32(getPatchIndex(imsize, block, step));
             self.imsize = imsize; self.block = block; self.step = step;
             [self.dimpatches, self.numpatches] = size(self.blockindices);
             self.name = ['MakePatches-' sprintf('%d-patches of size %d', self.numpatches, self.dimpatches) ];
