@@ -17,11 +17,11 @@ numpatchhid = 16;
 
 numhid = 800;
 numclass = 10;
-numdata = 60000;
+numdata = 6000;
 droprate = 0.5;
 
 pfopts.sizeimg = [28, 28]; pfopts.sizepatch = [8,8]; pfopts.sizestride = 2;
-pfopts.numhid = [300]; pfopts.numhid2 = [50]; ptopts.numpose = 10;
+pfopts.numhid = [50]; pfopts.numhid2 = [30]; ptopts.numpose = 10;
 [LayerPatchFeaturize info] = getLayerPatchFeaturize(pfopts);
 
 L = {};

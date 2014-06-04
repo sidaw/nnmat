@@ -38,7 +38,8 @@ X = castfunc(X(1:dimdata, 1:numdata));
 y = castfunc(y(:, 1:numdata));
 params = castfunc(nn.getparams());
 
-minibatchlossfunc = @(params, X, y) BatchLossFunction(params, X, y, nn, 'nll_logprob');
+optsloss.lambdaL2 = 1e-3;
+minibatchlossfunc = @(params, X, y) BatchLossFunction(params, X, y, nn, 'nll_logprob', optsloss);
 batchlossfunc = @(params) BatchLossFunction(params, X, y, nn, 'nll_logprob');
 
 options.DerivativeCheck = 0;
@@ -52,11 +53,11 @@ paramsopt = minFuncAdagrad(minibatchlossfunc, params, X, y, options);
 %paramsopt = minFunc(batchlossfunc, params, options);
 
 noise1.testing = 1; noise2.testing = 1; noise3.testing = 1;
-[~, trainpreds] = max(nn.forward(X),[],1);
-[~, trainlabels] = max(y,[],1);
-trainacc = mean(trainlabels == trainpreds);
+%[~, trainpreds] = max(nn.forward(X),[],1);
+%[~, trainlabels] = max(y,[],1);
+% trainacc = mean(trainlabels == trainpreds);
 
 [~, testpreds] = max(nn.forward(Xtest),[],1);
 [~, testlabels] = max(ytest,[],1);
 testacc = mean(testlabels == testpreds);
-disp([trainacc testacc])
+disp([testacc])
