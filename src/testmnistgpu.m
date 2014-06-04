@@ -44,11 +44,12 @@ batchlossfunc = @(params) BatchLossFunction(params, X, y, nn, 'nll_logprob');
 
 options.DerivativeCheck = 0;
 options.BatchSize = 50;
-options.MaxIter = 10;
+options.MaxIter = 100;
 options.eta = 1e-2;
 options.PermuteData = 1;
 options.RowMajor = 0;
-paramsopt = minFuncAdagrad(minibatchlossfunc, params, X, y, options);
+statfunc = @(w) getTestAcc(w, nn, Xtest, ytest);
+paramsopt = minFuncAdagrad(minibatchlossfunc, params, X, y, options, statfunc);
 
 %paramsopt = minFunc(batchlossfunc, params, options);
 
