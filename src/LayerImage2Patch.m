@@ -21,7 +21,7 @@ classdef LayerImage2Patch < LayerBase
         
         function output=forward(self, input)
             self.input = input;
-            self.output = zeros([size(self.blockindices), size(input,2)]);
+            self.output = convertType(zeros([size(self.blockindices), size(input,2)]));
             for i=1:size(input,2)
                 Xcurrent = input(:,i);
                 self.output(:,:,i) = Xcurrent(self.blockindices);

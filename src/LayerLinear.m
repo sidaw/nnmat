@@ -3,7 +3,7 @@ classdef LayerLinear < LayerBase
     methods
         function L = LayerLinear(numin, numout, options)
             L.name = 'Linear';
-            L.params = 0.01/sqrt(numin)*randn(numout, numin);
+            L.params = convertType( 0.01/sqrt(numin)*randn(numout, numin) );
         end
         
         function output=forward(self, input)

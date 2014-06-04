@@ -8,7 +8,7 @@ classdef LayerPatches < LayerBase
 
     methods
         function L = LayerPatches(numin, numout, numpatches, options)
-            L.params = 0.01/sqrt(numin)*randn(numout, numin);
+            L.params = convertType(0.01/sqrt(numin)*randn(numout, numin));
             L.name = ['LaterPatches' sprintf('%d-by-%d-by-%d', numin, numout, numpatches) ];
             L.numin = numin; L.numout = numout; L.numpatches = numpatches;
         end
@@ -27,7 +27,7 @@ classdef LayerPatches < LayerBase
             [outdim, numpatch, sizebatch] = size(dLdout);
             flatdLdout = reshape(dLdout, outdim, []);
             
-            grad = zeros(self.numout, self.numin);
+            grad = convertType(zeros(self.numout, self.numin));
             
             dLdin = reshape(self.params' * flatdLdout, self.numin, numpatch, sizebatch);
             %dLdin = zeros(self.numin, numpatch, sizebatch);

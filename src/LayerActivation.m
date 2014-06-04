@@ -17,7 +17,7 @@ methods
         L.hasbias = parseOption(options, 'hasBias', 1);
       end
       
-      L.params = zeros(numin, 1);
+      L.params = convertType(zeros(numin, 1));
     end
 
     function output = forward(self, input)
