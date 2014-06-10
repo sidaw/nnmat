@@ -17,7 +17,7 @@ numpatchhid = 16;
 
 numhid = 800;
 numclass = 10;
-numdata = 6000;
+numdata = 60000;
 droprate = 0.5;
 
 pfopts.sizeimg = [28, 28]; pfopts.sizepatch = [8,8]; pfopts.sizestride = 2;
