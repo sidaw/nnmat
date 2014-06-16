@@ -13,6 +13,9 @@ switch name
     case 'relu'
         actfunc = @(x) max(0,x);
         gradfunc = @(x,y,dfdo) (x>0)*1.*dfdo;
+    case 'none'
+        actfunc = @(x) x;
+        gradfunc = @(x,y,dfdo) dfdo;
     
     % "normalizing" activations, where y_i = f(x_i, g(x_1, ..., x_k) )
     % quite commonly used, and no need to deal with the full jacobian

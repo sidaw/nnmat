@@ -1,63 +1,57 @@
-classdef LayersSerial < LayerBase
+classdef LayerRecursive < LayerBase
  % write a description of the class here.
 properties
-    layers
-    decodeinfo
+    inputs
+    output
+    grads
+    
+    iters
+    layer
 end
 
 methods
-    function L = LayersSerial(varargin)
-      if length(varargin) == 1
-          warning('No need to use LayersSerial if it only contains one element')
-          if iscell(varagin{1})
-              warning('attempting to use first item as the list')
-              varargin = varagin{1};
-          end
+    function self = LayerRecursive(layer, iters)
+      self.inputs = {};
+      self.outputs = {};
+      if iters == 1
+          warning('why bother using recursive layer if you are only doing it once?');
       end
-      
-      L.layers = varargin;
+      self.layer = layer;
+      self.iters = iters;
     end
 
     function output=forward(self, input)
-      output = input;
-      for i = 1:length(self.layers)
-        output = self.layers{i}.forward(output);
+      self.inputs{1} = input;
+      for i = 2:self.iters
+        input = self.layer.forward(input);
+        self.inputs{i} = input;
       end
-      self.output = output; self.input = input;
+      output = self.layer.forward(input);
+      self.output = output;
     end
 
     function dLdin = backward(self, dfdo)
       dLdin = dfdo;
-      for i = length(self.layers):-1:1
-        dLdin = self.layers{i}.backward(dLdin);
+      for i = self.iters:-1:1
+        self.layer.input = self.inputs{i};
+        dLdin = self.layer.backward(dLdin);
+        self.grads{i} = self.layer.getgrad();
       end
     end
 
-    % convert parameters describing this module to a vector
-    % so we can have one optimization interface
+    % just set the parameter to the internal layer
     function [X] = getparams(self)
-      X = [];
-      self.decodeinfo = [];
-      for i = 1:length(self.layers)
-        X = [X; self.layers{i}.getparams()];
-        self.decodeinfo = [self.decodeinfo; length(X)];
-      end
+      X = self.layer.getparams();
     end
 
     function setparams(self, X)
-      start = 1;
-      for i = 1:length(self.layers)
-        if self.decodeinfo(i) >= start
-            self.layers{i}.setparams(X( start:self.decodeinfo(i) ));
-            start = self.decodeinfo(i)+1;
-        end
-      end
+      self.layer.setparams(X);
     end
 
     function [grad] = getgrad(self)
-      grad = [];
-      for i = 1:length(self.layers)
-        grad = [grad; self.layers{i}.getgrad()];
+      grad = self.grads{1};
+      for i = 2:self.iter
+          grad = grad + self.grads{i};
       end
     end
 

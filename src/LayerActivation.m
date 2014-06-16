@@ -13,9 +13,11 @@ methods
       L.gradfunc = gradfunc;
       L.actfunc = actfunc;
       
-      if exist('options', 'var')
-        L.hasbias = parseOption(options, 'hasBias', 1);
+      
+      if ~exist('options', 'var')
+        options.exist = 0;
       end
+      L.hasbias = parseOption(options, 'hasBias', 1);
       
       L.params = convertType(zeros(numin, 1));
     end

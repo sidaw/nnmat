@@ -27,9 +27,15 @@ if order == 2
 	end
 else
 	[f,g] = funObj(x,varargin{:});
-	
+    p = length(g);
+    fprintf('Just checking 100 fixed gradients out of %d\n', p)
+    interval = floor(p/100);
+    l = length(p);
+    listtocheck = [1:50,p-50:p];
+	g = g(listtocheck);
 	fprintf('Checking Gradient...\n');
 	[f2,g2] = autoGrad(x,type,funObj,varargin{:});
+    
 	
 	fprintf('Max difference between user and numerical gradient: %e\n',max(abs(g-g2)));
 	if max(abs(g-g2)) > 1e-4
