@@ -7,11 +7,11 @@ numhid2 = parseOption(opts, 'numhid2', 64);
 
 patchgen = LayerImage2Patch(sizeimg, sizepatch, sizestride);
 patchlayer = LayerPatches(patchgen.dimpatches, numhid, patchgen.numpatches);
-patchact = LayerActivation(numhid, 'sigmoid');
-poolinglayer = LayerSpatialMaxPooling(sqrt(patchgen.numpatches)*[1,1], [3,3], 3);
+patchact = LayerActivation(numhid, 'relu');
+poolinglayer = LayerSpatialMaxPooling(sqrt(patchgen.numpatches)*[1,1], [3,3], 2);
  
 patchlayer2 = LayerPatches(numhid, numhid2, poolinglayer.numpatches);
-patchact2 = LayerActivation(numhid2, 'sigmoid');
+patchact2 = LayerActivation(numhid2, 'relu');
 poolinglayer2 = LayerSpatialMaxPooling(sqrt(poolinglayer.numpatches)*[1,1], [2,2], 2);
 
 patch2flat = LayerFlattenPatches(numhid, poolinglayer.numpatches);
