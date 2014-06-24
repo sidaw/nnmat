@@ -5,7 +5,7 @@ datapath = '~/data/mnisty/';
 load([datapath 'mnist.mat'])
 
 if ~testToolboxes('Parallel Computing Toolbox')
-    castfunc = @(x) double(x);
+    castfunc = @(x) single(x);
     disp('No parallel computing toolbox')
 else
     castfunc = @(x) gpuArray(single(x));
@@ -51,14 +51,15 @@ batchlossfunc = @(params) BatchLossFunction_DivideData(params, X, y, nn, 'nll_lo
 
 options.DerivativeCheck = 0;
 options.BatchSize = 100;
-options.MaxIter = 500;
+options.MaxIter = 10;
 options.eta = 1e-3;
 options.PermuteData = 0;
 
 statfunc = @(w) getTestAcc(w, nn, Xtest, ytest);
 paramsopt = minFuncSGDMmtm(minibatchlossfunc, params, X, y, options, statfunc);
 %%
-options.MaxIter = 20;
+noisinglayer.testing = 0;
+options.MaxIter = 10;
 paramsopt = minFunc(batchlossfunc, paramsopt, options);
 
 % [~, trainpreds] = max(nn.forward(X),[],1);

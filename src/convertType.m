@@ -1,6 +1,6 @@
 function typeddata = convertType(x)
-if ~testToolboxes('Parallel Computing Toolbox')
-    typeddata = double(x);
+if 1 %~testToolboxes('Parallel Computing Toolbox')
+    typeddata = single(x);
 else
     typeddata = gpuArray(single(x));
 end
