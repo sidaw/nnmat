@@ -39,10 +39,10 @@ classdef LayerSpatialMaxPooling < LayerBase
             [sizevectregion, numregions] = size(self.blockindices); %#ok<ASGLU>
             % output should be of size numchannels by numregions, by sizebatch 
             
-            self.output = zeros(numchannels, numregions, sizebatch);
+            self.output = convertType(zeros(numchannels, numregions, sizebatch));
             
             self.input = input;
-            self.argmaxs = zeros(numchannels, numregions, sizebatch);
+            self.argmaxs = convertType(zeros(numchannels, numregions, sizebatch));
             
             for i=1:numregions
                 [currentpool, currentargmax] = max(input(:,self.blockindices(:,i),:), [], 2);
@@ -56,17 +56,16 @@ classdef LayerSpatialMaxPooling < LayerBase
         % some of this can probably be made much faster
         function dLdin = backward(self, dLdout)
             [numchannels, numregions, sizebatch] = size(dLdout); %#ok<ASGLU>
-            dLdin = zeros(self.numchannels, self.sizevectimg, sizebatch);
+            dLdin = convertType(zeros(self.numchannels, self.sizevectimg, sizebatch));
             onetosizebatch = reshape(repmat(1:sizebatch, [numchannels, 1]), 1, []);
             channelindices = repmat(1:numchannels, [1, sizebatch]);
-            
             
             for i=1:numregions
                 currentargmax = reshape(self.argmaxs(:,i,:),1, []);
                 currentblock = self.blockindices(:,i);
                 
                 sparsegradind = sub2ind([numchannels, size(currentblock,1), sizebatch], channelindices, currentargmax, onetosizebatch);
-                updates = zeros(self.numchannels, self.blocksize, sizebatch);
+                updates = convertType(zeros(self.numchannels, self.blocksize, sizebatch));
                 updates(sparsegradind) = reshape(dLdout(:, i, :), 1, []);
                 dLdin(:, currentblock, :) = dLdin(:, currentblock ,:) + updates;
             end
