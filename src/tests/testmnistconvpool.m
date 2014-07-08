@@ -51,7 +51,7 @@ batchlossfunc = @(params) BatchLossFunction_DivideData(params, X, y, nn, 'nll_lo
 
 options.DerivativeCheck = 0;
 options.BatchSize = 100;
-options.MaxIter = 1;
+options.MaxIter = 5;
 options.eta = 1e-3;
 options.PermuteData = 0;
 

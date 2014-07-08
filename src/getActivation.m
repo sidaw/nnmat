@@ -13,6 +13,12 @@ switch name
     case 'relu'
         actfunc = @(x) max(0,x);
         gradfunc = @(x,y,dfdo) (x>0)*1.*dfdo;
+    case 'negrelu'
+        actfunc = @(x) max(0,-x);
+        gradfunc = @(x,y,dfdo) -(-x>0)*1.*dfdo;
+    case 'square'
+        actfunc = @(x) x.^2;
+        gradfunc = @(x,y,dfdo) 2*x.*dfdo;
     case 'none'
         actfunc = @(x) x;
         gradfunc = @(x,y,dfdo) dfdo;

@@ -22,19 +22,25 @@ L{end+1} = LayerActivation(numclass, 'logsoftmax');
 nn = LayersSerial(L{:});
 
 X = X(1:dimdata, 1:numdata);
-y = y(:, 1:numdata);
 
-params = nn.getparams();
+y = castfunc(y(:, 1:numdata));
+params = castfunc(nn.getparams());
+
 
 minibatchlossfunc = @(params, X, y) BatchLossFunction(params, X, y, nn, 'nll_logprob');
 
 options.DerivativeCheck = 0;
 options.BatchSize = 100;
 options.MaxIter = 1000;
-options.eta = 1e-2;
+options.eta = 1e4;
 options.PermuteData = 1;
 options.RowMajor = 0;
-paramsopt = minFuncAdagrad(minibatchlossfunc, params, X, y, options);
+
+
+optsloss.lambdaL2 = 1e-7;
+minibatchlossfunc = @(params, X, y) BatchLossFunction(params, X, y, nn, 'nll_logprob', optsloss);
+
+paramsopt = minFuncSGDMmtm(minibatchlossfunc, params, X, y, options);
 
 [~, trainpreds] = max(nn.forward(X),[],1);
 [~, trainlabels] = max(y,[],1);

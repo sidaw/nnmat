@@ -15,23 +15,22 @@ end
 dimdata =  784;
 numpatchhid = 16;
 
-numhid = 100;
+numhid = 600;
 numclass = 10;
 numdata = 60000;
 droprate = 0.5;
 
 pfopts.sizeimg = [28, 28]; pfopts.sizepatch = [5,5]; pfopts.sizestride = 1;
-pfopts.numhid = [32]; pfopts.numhid2 = [64]; 
-[LayerPatchFeaturize info] = getLayerPatch2ConvPool(pfopts);
+pfopts.numhid = [150]; pftops.newpose = 10; pfopts.numhid2 = [64]; 
+[LayerPatchFeaturize info] = getLayerPatchFeaturizeHiddens(pfopts);
 
 L = {};
 L{end+1} = LayerPatchFeaturize;
 % the fully connected layers
-numhid = 600;
 L{end+1} = LayerLinear(info.numout, numhid);
 L{end+1} = LayerActivation(numhid, 'relu');
 noisinglayer = LayerNoising(0.5);
-L{end+1} = noisinglayer;
+%L{end+1} = noisinglayer;
 L{end+1} = LayerLinear(numhid, numclass);
 L{end+1} = LayerActivation(numclass, 'logsoftmax');
 nn = LayersSerial(L{:});
@@ -51,8 +50,8 @@ batchlossfunc = @(params) BatchLossFunction_DivideData(params, X, y, nn, 'nll_lo
 
 options.DerivativeCheck = 0;
 options.BatchSize = 100;
-options.MaxIter = 10;
-options.eta = 1e-3;
+options.MaxIter = 100;
+options.eta = 1e-5;
 options.PermuteData = 0;
 
 statfunc = @(w) getTestAcc(w, nn, Xtest, ytest);
