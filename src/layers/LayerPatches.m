@@ -8,7 +8,7 @@ classdef LayerPatches < LayerBase
 
     methods
         function L = LayerPatches(numin, numout, numpatches, options)
-            L.params = convertType(0.01/sqrt(numin)*randn(numout, numin));
+            L.params = convertType(0.1/sqrt(numin)*randn(numout, numin));
             L.name = ['LaterPatches' sprintf('%d-by-%d-by-%d', numin, numout, numpatches) ];
             L.numin = numin; L.numout = numout; L.numpatches = numpatches;
         end

@@ -3,14 +3,14 @@ sizeimg = parseOption(opts, 'sizeimg', [28, 28]);
 sizepatch = parseOption(opts, 'sizepatch', [4, 4]);
 sizestride = parseOption(opts, 'sizestride', [1]);
 numhid = parseOption(opts, 'numhid', 300);
-numhid = parseOption(opts, 'numhid2', 300);
+numhid2 = parseOption(opts, 'numhid2', 300);
 numpose = parseOption(opts, 'numpose', 6);
 
 patchgen = LayerImage2Patch(sizeimg, sizepatch, sizestride);
 patchlayer = LayerPatches(patchgen.dimpatches, numhid, patchgen.numpatches);
 patchact = LayerActivation(numhid, 'relu');
 
-patchlayer2 = LayerPatches(numhid, numphid2, patchgen.numpatches);
+patchlayer2 = LayerPatches(numhid, numhid2, patchgen.numpatches);
 patchact2 = LayerActivation(numhid2, 'relu');
 
 patchlayer3 = LayerPatches(numhid2, numpose, patchgen.numpatches);
