@@ -4,8 +4,10 @@ sizepatch = parseOption(opts, 'sizepatch', [5, 5]);
 sizestride = parseOption(opts, 'sizestride', [1]);
 numhid = parseOption(opts, 'numhid', 32);
 numhid2 = parseOption(opts, 'numhid2', 64);
+numchan = parseOption(opts, 'numchan', 1);
 
-patchgen = LayerImage2Patch(sizeimg, sizepatch, sizestride);
+
+patchgen = LayerImage2Patch(sizeimg, sizepatch, sizestride, numchan);
 patchlayer = LayerPatches(patchgen.dimpatches, numhid, patchgen.numpatches);
 patchact = LayerActivation(numhid, 'relu');
 poolinglayer = LayerSpatialMaxPooling(sqrt(patchgen.numpatches)*[1,1], [3,3], 2);

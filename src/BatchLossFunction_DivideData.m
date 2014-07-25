@@ -3,7 +3,7 @@ function [ loss, grad ] = BatchLossFunction_DivideData(params, X, y, nn, lossnam
     nn.setparams(params);
     
     numexample = size(X,2);
-    batchsize = 200;
+    batchsize = 100;
     
     loss = 0;
     grad = 0;

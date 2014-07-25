@@ -15,16 +15,16 @@ end
 dimdata =  784;
 numhid = 100;
 numclass = 10;
-numdata = 1000;
-numhid2 = 800;
+numdata =60000;
 
 L = {};
 %L{end+1} = LayerNoising(0.3);
 L{end+1} = LayerLinear(dimdata, numhid);
-L{end+1} = LayerActivation(numhid, 'sigmoid');
-%L{end+1} = LayerNoising(0.5);
-% L{end+1} = LayerLinearPositive(numhid, numhid2);
-% L{end+1} = LayerActivation(numhid2, 'relu');
+L{end+1} = LayerBlockActivation(numhid, 'capsulev2', 10);
+
+% switch this out to use normal activation
+% L{end+1} = LayerActivation(numhid, 'relu');
+
 %L{end+1} = LayerNoising(0.5);
 L{end+1} = LayerLinear(numhid, numclass);
 L{end+1} = LayerActivation(numclass, 'logsoftmax');

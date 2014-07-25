@@ -1,4 +1,8 @@
-function ttt = getPatchIndex(imsize, block, step)
+function ttt = getPatchIndex(imsize, block, step, numchan)
+    if nargin < 4
+      numchan = 1;
+    end
+    
     ma = imsize(1);
     na = imsize(2);
     m = block(1); n = block(2);
@@ -21,6 +25,16 @@ function ttt = getPatchIndex(imsize, block, step)
     cols = 1:length(ridx);
     for j=0:ceil(nn/step-1),
         ttt(:,j*length(ridx)+cols) = tt+ma*j*step;
+    end
+    
+    % this part can be optimized should it become performance intensive
+    ttta = zeros(size(ttt,1)*numchan, size(ttt,2) );
+    sizepatch = prod(block);
+    sizechan = prod(imsize);
+    for i = 1:numchan
+        startind = (i-1)*sizepatch + 1;
+        endind = i*sizepatch;
+        ttta(startind:endind, :) = ttt + sizechan*(i-1);
     end
     
 end

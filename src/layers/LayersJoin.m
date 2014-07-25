@@ -1,3 +1,5 @@
+% NOT IMPLEMENTED
+
 classdef LayersFork < LayerBase
  % apply each of the containing layer to the same input, producing a
  % concatenated ouput
