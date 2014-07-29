@@ -14,7 +14,7 @@ poolinglayer = LayerSpatialMaxPooling(sqrt(patchgen.numpatches)*[1,1], [3,3], 2)
  
 patchlayer2 = LayerPatches(numhid, numhid2, poolinglayer.numpatches);
 patchact2 = LayerActivation(numhid2, 'relu');
-poolinglayer2 = LayerSpatialMaxPooling(sqrt(poolinglayer.numpatches)*[1,1], [2,2], 2);
+poolinglayer2 = LayerSpatialMaxPooling(sqrt(poolinglayer.numpatches)*[1,1], [3,3], 2);
 
 patch2flat = LayerFlattenPatches(numhid, poolinglayer.numpatches);
 

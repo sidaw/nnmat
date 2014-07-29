@@ -13,14 +13,14 @@ end
 
 
 dimdata =  784;
-numhid = 100;
+numhid = 3;
 numclass = 10;
-numdata =60000;
+numdata = 600;
 
 L = {};
 %L{end+1} = LayerNoising(0.3);
 L{end+1} = LayerLinear(dimdata, numhid);
-L{end+1} = LayerBlockActivation(numhid, 'capsulev2', 10);
+L{end+1} = LayerBlockActivation(numhid, 'capsulev2', 3);
 
 % switch this out to use normal activation
 % L{end+1} = LayerActivation(numhid, 'relu');
@@ -34,7 +34,7 @@ X = castfunc(X(1:dimdata, 1:numdata));
 y = castfunc(y(:, 1:numdata));
 params = castfunc(nn.getparams());
 
-options.DerivativeCheck = 0;
+options.DerivativeCheck = 1;
 options.BatchSize = 200;
 options.eta = 1e-2;
 options.PermuteData = 1;

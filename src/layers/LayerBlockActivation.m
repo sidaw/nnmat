@@ -27,7 +27,7 @@ methods
       L.numblocks = numin / blocksize; 
       
       if ~exist('options', 'var')
-        options.exist = 1; % simply initialization the options
+        options.exist = 1; % cheat to initialize the options
       end
       L.hasbias = parseOption(options, 'hasBias', 1);
       

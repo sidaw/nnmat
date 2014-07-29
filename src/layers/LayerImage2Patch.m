@@ -1,6 +1,9 @@
+% convert a imsize(1) by imsize(2) by numchan image to a bunch of
+% patches of block(1) by block(2) in increment of step
+% the output is of size prod(block) by numblocks by sizebatch
+% which can then be feed into LayerPatches
 classdef LayerImage2Patch < LayerBase
-    % initial deterministic data processing layer, does not support
-    % backprop through it
+
     properties
         imsize
         block
@@ -33,6 +36,15 @@ classdef LayerImage2Patch < LayerBase
         
         % some of this can probably be made much faster
         function dLdin = backward(self, dLdout)
+            [~, numpatch, sizebatch] = size(dLdout);
+            sizevecimg = prod(self.imsize) * self.numchan;
+            
+            dLdin = zeros(sizevecimg, sizebatch); 
+            for patchind = 1:numpatch
+                dLdin(self.blockindices(:, patchind), :) = ...
+                    dLdin(self.blockindices(:, patchind), :) + ...
+                    dLdout(:, patchind, :);
+            end
             dLdin = 0;
         end
     end
