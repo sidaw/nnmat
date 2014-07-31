@@ -1,4 +1,4 @@
-function ttt = getPatchIndex(imsize, block, step, numchan)
+function ttta = getPatchIndex(imsize, block, step, numchan)
     if nargin < 4
       numchan = 1;
     end
@@ -9,7 +9,7 @@ function ttt = getPatchIndex(imsize, block, step, numchan)
     
     if any([ma na] < [m n]) % if neighborhood is larger than image
         b = zeros(m*n,0);
-        return
+        error('The image is not big enough');
     end
     
     % Create Hankel-like indexing sub matrix.

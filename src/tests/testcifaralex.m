@@ -23,10 +23,12 @@ X = castfunc(X(1:dimdata, 1:numdata));
 % Xtest = Xtest .* (rand(size(Xtest)) > datadroprate);
 
 y = castfunc(y(:, 1:numdata));
+
+[nn] = getLayerAlexCIFAR26error();
 params = castfunc(nn.getparams());
 
 optsloss.lambdaL2 = 1e-7;
-[nn] = getLayerAlexCIFAR26error();
+
 minibatchlossfunc = @(params, X, y) BatchLossFunction(params, X, y, nn, 'nll_logprob', optsloss);
 batchlossfunc = @(params) BatchLossFunction_DivideData(params, X, y, nn, 'nll_logprob', optsloss);
 

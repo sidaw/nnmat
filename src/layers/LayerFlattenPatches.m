@@ -6,7 +6,7 @@ classdef LayerFlattenPatches < LayerBase
         dimpatches
         numpatches
         numout
-        tranpose
+        transpose
     end
 
     methods

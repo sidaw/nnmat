@@ -6,7 +6,7 @@ numchan = parseOption(opts, 'numchan', 32);
 pooltype = parseOption(opts, 'pooltype', 'max'); % accepts max, avg, and stoic for now
 
 patchgen = LayerImage2Patch(sizeimg, sizepatch, sizestride, numchan);
-poollayer = LayerMaxAggregate(patchgen.dimpatch, numfilter, patchgen.numpatch, pooltype);
+poollayer = LayerAggregate(patchgen.dimpatch, numchan, patchgen.numpatch, pooltype);
 
 Lfeatures = {};
 Lfeatures{end+1} = patchgen;
