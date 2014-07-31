@@ -1,42 +1,67 @@
-function [LayerPatchFeaturize, info] = getLayerAlexCIFAR26error(opts)
-sizeimg = parseOption(opts, 'sizeimg', [32, 32]);
-sizepatch = parseOption(opts, 'sizepatch', [5, 5]);
-sizestride = parseOption(opts, 'sizestride', [1]);
-numfilter = parseOption(opts, 'numfilter', 32);
-numchan = parseOption(opts, 'numchan', 3);
+function [alexnn26] = getLayerAlexCIFAR26error(opts)
 
-patchgen = LayerImage2Patch(sizeimg, sizepatch, sizestride, numchan);
-patchlayer = LayerPatches(patchgen.dimpatches, numfilter, patchgen.numpatches);
-patchact = LayerActivation(numfilter, 'relu');
-sizeconv = sqrt(patchgen.numpatches)*[1,1];
-poolinglayer = LayerSpatialMaxPooling(sizeconv, [3,3], 2);
-numpatch = poolinglayer.numpatches;
-optflat.transpose = 1;
-patch2flat = LayerFlattenPatches(numfilter, numpatch, optflat);
+conv1opts.sizeimg = [32, 32];
+conv1opts.sizepatch = [5, 5];
+conv1opts.sizestride = 1;
+conv1opts.numfilter = 32;
+conv1opts.numchan = 3;
+conv1opts.activation = parseOption(opts, 'activation', 'none');
+[conv1, conv1info] = getLayerConvolution(conv1opts);
 
-sizepool1 = sqrt(numpatch)*[1,1];
-patchgen2 = LayerImage2Patch(sizepool1, sizepatch, sizestride, numfilter);
-patchlayer2 = LayerPatches(patchgen2.dimpatches, numfilter, patchgen2.numpatches);
-patchact2 = LayerActivation(numfilter, 'relu');
-sizeconv2 = sqrt(patchgen2.numpatches)*[1,1];
-poolinglayer2 = LayerSpatialMaxPooling(sizeconv2, [3,3], 2);
-numpatch2 = poolinglayer2.numpatches;
-optflat.transpose = 1;
-patch2flat2 = LayerFlattenPatches(numfilter, numpatch2, optflat);
+pool1opts.sizeimg = conv1info.sizeimg;
+pool1opts.sizepatch = [3, 3];
+pool1opts.sizestride = 2;
+pool1opts.numchan = conv1info.numfilter;
+pool1opts.pooltype = 'max';
+[pool1, pool1info] = getLayerPooling(pool1opts);
 
+conv2opts.sizeimg = pool1info.sizeimg;
+conv2opts.sizepatch = [5, 5];
+conv2opts.sizestride = 1;
+conv2opts.numfilter = 32;
+conv2opts.numchan = pool1info.numchan;
+conv2opts.activation = parseOption(opts, 'activation', 'relu');
+[conv2, conv2info] = getLayerConvolution(conv2opts);
 
-Lfeatures = {};
-Lfeatures{end+1} = patchgen;
-Lfeatures{end+1} = patchlayer;
-Lfeatures{end+1} = patchact;
-Lfeatures{end+1} = poolinglayer;
+pool2opts.sizeimg = conv2info.sizeimg;
+pool2opts.sizepatch = [3, 3];
+pool2opts.sizestride = 2;
+pool2opts.numchan = conv2info.numfilter;
+pool2opts.pooltype = 'avg';
+[pool2, pool2info] = getLayerPooling(pool2opts);
 
-% Lfeatures{end+1} = patchlayer2;
-% Lfeatures{end+1} = patchact2;
-% Lfeatures{end+1} = poolinglayer2;
+conv3opts.sizeimg = pool2info.sizeimg;
+conv3opts.sizepatch = [5, 5];
+conv3opts.sizestride = 1;
+conv3opts.numfilter = 64;
+conv3opts.numchan = pool2info.numchan;
+conv3opts.activation = parseOption(opts, 'activation', 'relu');
+[conv3, conv3info] = getLayerConvolution(conv3opts);
 
-Lfeatures{end+1} = patch2flat;
-LayerPatchFeaturize = LayersSerial(Lfeatures{:});
-info.numout = patch2flat.numout;
+pool3opts.sizeimg = conv3info.sizeimg;
+pool3opts.sizepatch = [3, 3];
+pool3opts.sizestride = 2;
+pool3opts.numchan = conv3info.filter;
+pool3opts.pooltype = 'avg';
+[pool3, pool3info] = getLayerPooling(pool3opts);
 
+L = {};
+L{end+1} = conv1;
+L{end+1} = pool1;
+
+L{end+1} = conv2;
+L{end+1} = pool2;
+
+L{end+1} = conv3;
+L{end+1} = pool3;
+
+numhid = 64;
+L{end+1} = LayerLinear(pool3info.numout, numhid);
+L{end+1} = LayerActivation(numhid, 'relu');
+
+numclass = 10;
+L{end+1} = LayerLinear(numhid, numclass);
+L{end+1} = LayerActivation(numclass, 'logsoftmax');
+
+alexnn26 = LayersSerial(L{:});
 end

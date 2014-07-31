@@ -6,7 +6,6 @@ classdef LayerFlattenPatches < LayerBase
         dimpatches
         numpatches
         numout
-        
         tranpose
     end
 
@@ -17,11 +16,10 @@ classdef LayerFlattenPatches < LayerBase
             self.numout = dimpatches * numpatches;
             
             if ~exist('transpose', 'var')
-                self.transpose = 0; % cheat to initialize the options
+                self.transpose = 0;
             else
                 self.transpose = transpose;
             end
-            
         end
         
         function output=forward(self, input)
@@ -36,8 +34,15 @@ classdef LayerFlattenPatches < LayerBase
             output=self.output;
         end
         
+        % check if this is the correct tranpose
         function dLdin = backward(self, dLdout)
-           dLdin = reshape(dLdout, self.dimpatches, self.numpatches, []);
+           
+           if self.transpose == 0
+               dLdin = reshape(dLdout, self.dimpatches, self.numpatches, []);
+           else
+               dLdin = reshape(dLdout, self.numpatches, self.dimpatches, []);
+               dLdin = permute(dLdin, [2,1,3]);
+           end
         end
     end
     

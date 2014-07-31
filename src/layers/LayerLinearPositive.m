@@ -1,5 +1,6 @@
 classdef LayerLinearPositive < LayerBase
-    % write a description of the class here.
+    % basic linear layer, but only allowing positive weights.
+    % usually does not work well, but good for analyzing optimization
     methods
         function L = LayerLinearPositive(numin, numout, options)
             L.name = 'Linear';
