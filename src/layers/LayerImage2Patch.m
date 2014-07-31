@@ -45,9 +45,8 @@ classdef LayerImage2Patch < LayerBase
             for patchind = 1:numpatch
                 dLdin(self.blockindices(:, patchind), :) = ...
                     dLdin(self.blockindices(:, patchind), :) + ...
-                    dLdout(:, patchind, :);
+                    reshape(dLdout(:, patchind, :), [], sizebatch);
             end
-            dLdin = 0;
         end
     end
     

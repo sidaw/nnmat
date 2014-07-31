@@ -34,7 +34,7 @@ classdef LayerFlattenPatches < LayerBase
             output=self.output;
         end
         
-        % check if this is the correct tranpose
+        % check if this is the correct transpose
         function dLdin = backward(self, dLdout)
            
            if self.transpose == 0

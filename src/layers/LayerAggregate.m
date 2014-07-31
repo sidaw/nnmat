@@ -51,11 +51,12 @@ classdef LayerAggregate < LayerBase
         % some of this can probably be made much faster
         function dLdin = backward(self, dLdout)
             %self.numchan, self.numpatch, sizebatch = size(dLdout)
-            [~, ~, sizebatch] = size(dLdout);
+            [~, sizebatch] = size(dLdout);
             dLdout = reshape(dLdout, self.numpatch, self.numchan, sizebatch);
             % somewhat tricky, the 4 here simply adds a singleton dimension
             dLdout = permute(dLdout, [4,2,1,3]);
             dLdin = bsxfun(@times, dLdout, self.backpropmask);
+            dLdin = reshape(dLdin, [], self.numpatch, sizebatch);
             % dLdout is now numchan by numpatch by sizebatch in the correct
             % interpretation
         end
