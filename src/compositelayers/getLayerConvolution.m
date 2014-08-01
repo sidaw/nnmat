@@ -7,7 +7,7 @@ numchan = parseOption(opts, 'numchan', 3);
 activation = parseOption(opts, 'activation', 'relu');
 
 patchgen = LayerImage2Patch(sizeimg, sizepatch, sizestride, numchan);
-patchlayer = LayerPatches(patchgen.dimpatch, numfilter, patchgen.numpatch);
+patchlayer = LayerPatches(patchgen.dimpatch *  patchgen.numchan, numfilter, patchgen.numpatch);
 patchact = LayerActivation(numfilter, activation);
 
 transpose = 1;

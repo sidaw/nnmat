@@ -2,7 +2,7 @@
 % patches of block(1) by block(2) in increment of step
 % the output is of size prod(block) by numblocks by sizebatch
 % which can then be feed into LayerPatches
-classdef LayerImage2Patch < LayerBase
+classdef LayerSlowerImage2Patch < LayerBase
 
     properties
         imsize
@@ -11,35 +11,29 @@ classdef LayerImage2Patch < LayerBase
         numchan
         
         blockindices
-        blockindiceschan
-        flatblockindices
         numpatch
         dimpatch
     end
 
     methods
-        function self = LayerImage2Patch(imsize, block, step, numchan, options)
+        function self = LayerSlowerImage2Patch(imsize, block, step, numchan, options)
+            self.blockindices = uint32(getPatchIndex(imsize, block, step, numchan));
             
-            % handle channels here instead of indices to make things faster
-            self.blockindices = uint32(getPatchIndex(imsize, block, step, 1));
-            self.blockindiceschan = uint32(getPatchIndex(imsize, block, step, numchan));
-            self.flatblockindices = self.blockindices(:);
             self.imsize = imsize; self.block = block; self.step = step; self.numchan = numchan;
             
-            self.dimpatch = size(self.blockindices, 1);
-            self.numpatch = size(self.blockindices, 2);
+            [self.dimpatch, self.numpatch] = size(self.blockindices);
             
             self.name = ['MakePatches-' sprintf('%d-patches of size %d', self.numpatch, self.dimpatch) ];
         end
         
         function output=forward(self, input)
             self.input = input;
-            [imgsizebynumchan, sizebatch] = size(input); %#ok<ASGLU>
-            inputchanbybatch = reshape(input, prod(self.imsize), self.numchan*sizebatch);
-            
-            output = reshape(inputchanbybatch(self.flatblockindices, :), self.dimpatch, self.numpatch, self.numchan, sizebatch);
-            output = permute(output, [1, 3, 2, 4]);
-            output = reshape(output, self.dimpatch * self.numchan, self.numpatch, sizebatch);
+            self.output = convertType(zeros([size(self.blockindices), size(input,2)]));
+            for i=1:size(input,2)
+                Xcurrent = input(:,i);
+                self.output(:,:,i) = Xcurrent(self.blockindices);
+            end
+            output=self.output;
         end
         
         % some of this can probably be made much faster
@@ -49,8 +43,8 @@ classdef LayerImage2Patch < LayerBase
             
             dLdin = zeros(sizevecimg, sizebatch); 
             for patchind = 1:numpatch
-                dLdin(self.blockindiceschan(:, patchind), :) = ...
-                    dLdin(self.blockindiceschan(:, patchind), :) + ...
+                dLdin(self.blockindices(:, patchind), :) = ...
+                    dLdin(self.blockindices(:, patchind), :) + ...
                     reshape(dLdout(:, patchind, :), [], sizebatch);
             end
         end

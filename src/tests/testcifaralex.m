@@ -14,14 +14,14 @@ end
 
 dimdata =  3072;
 numclass = 10;
-numdata = 20;
+numdata = 5000;
 droprate = 0.5;
 
 X = castfunc(X(1:dimdata, 1:numdata));
 y = castfunc(y(:, 1:numdata));
 
-%Xtest = castfunc(Xtest(1:dimdata, 1:numdata));
-%ytest = castfunc(ytest(:, 1:numdata));
+Xtest = castfunc(Xtest(1:dimdata, 1:numdata));
+ytest = castfunc(ytest(:, 1:numdata));
 
 [nn] = getLayerAlexCIFAR26error();
 params = castfunc(nn.getparams());
@@ -31,14 +31,14 @@ optsloss.lambdaL2 = 1e-7;
 minibatchlossfunc = @(params, X, y) BatchLossFunction(params, X, y, nn, 'nll_logprob', optsloss);
 batchlossfunc = @(params) BatchLossFunction_DivideData(params, X, y, nn, 'nll_logprob', optsloss);
 
-options.DerivativeCheck = 1;
+options.DerivativeCheck = 0;
 options.BatchSize = 100;
-options.MaxIter = 5;
-options.eta = 5e-4;
+options.MaxIter = 30;
+options.eta = 4e-3;
 options.PermuteData = 0;
 
-statfunc = @(w) 0; %getTestAcc(w, nn, Xtest, ytest);
-%paramsopt = minFuncSGDMmtm(minibatchlossfunc, params, X, y, options, statfunc);
+statfunc = @(w) getTestAcc(w, nn, Xtest, ytest);
+paramsopt = minFuncSGDMmtm(minibatchlossfunc, params, X, y, options, statfunc);
 %%
 noisinglayer.testing = 0;
 options.MaxIter = 30;
