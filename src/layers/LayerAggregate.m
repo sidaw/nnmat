@@ -41,7 +41,6 @@ classdef LayerAggregate < LayerBase
                     prob = (self.sizepatch - numavgpool) / self.sizepatch;
                     self.backpropmask = rand(size(input_reshape)) >  self.sizepatch;
                     output = sum(input_reshape .* self.backpropmask, 1);
-                    
             end
                     
             output = squeeze(output);
