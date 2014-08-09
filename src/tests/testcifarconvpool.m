@@ -15,7 +15,7 @@ end
 dimdata =  3072;
 
 numclass = 10;
-numdata = 50000;
+numdata = 10;
 droprate = 0.5;
 
 pfopts.sizeimg = [32, 32]; pfopts.sizepatch = [5,5]; pfopts.sizestride = 1;

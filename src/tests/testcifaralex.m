@@ -14,7 +14,7 @@ end
 
 dimdata =  3072;
 numclass = 10;
-numdata = 50000;
+numdata = 500;
 droprate = 0.5;
 
 X = castfunc(X(1:dimdata, 1:numdata));
@@ -33,15 +33,15 @@ batchlossfunc = @(params) BatchLossFunction_DivideData(params, X, y, nn, 'nll_lo
 
 options.DerivativeCheck = 0;
 options.BatchSize = 100;
-options.MaxIter = 1000;
+options.MaxIter = 5;
 options.eta = 5e-4;
 options.PermuteData = 0;
 
-statfunc = @(w) getTestAcc(w, nn, Xtest, ytest);
+statfunc = @(w) 0; % getTestAcc(w, nn, Xtest, ytest);
 paramsopt = minFuncSGDMmtm(minibatchlossfunc, params, X, y, options, statfunc);
 %%
 %noisinglayer.testing = 0;
-%options.MaxIter = 30;
+options.MaxIter = 30;
 %paramsopt = minFunc(batchlossfunc, params, options);
 
 % [~, trainpreds] = max(nn.forward(X),[],1);
