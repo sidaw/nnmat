@@ -5,9 +5,13 @@ sizestride = parseOption(opts, 'sizestride', [1]);
 numfilter = parseOption(opts, 'numfilter', 32);
 numchan = parseOption(opts, 'numchan', 3);
 activation = parseOption(opts, 'activation', 'relu');
+initW = parseOption(opts, 'initW', 1e-3);
+
 
 patchgen = LayerImage2Patch(sizeimg, sizepatch, sizestride, numchan);
-patchlayer = LayerPatches(patchgen.dimpatch *  patchgen.numchan, numfilter, patchgen.numpatch);
+
+patchopts.initW = initW;
+patchlayer = LayerPatches(patchgen.dimpatch *  patchgen.numchan, numfilter, patchgen.numpatch, patchopts);
 patchact = LayerActivation(numfilter, activation);
 
 transpose = 1;

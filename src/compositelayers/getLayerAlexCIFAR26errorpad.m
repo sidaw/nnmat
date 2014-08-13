@@ -7,6 +7,7 @@ conv1opts.sizestride = 1;
 conv1opts.numfilter = 32;
 conv1opts.numchan = 3;
 conv1opts.activation = 'none';
+conv1opts.initW = 1e-4;
 [conv1, conv1info] = getLayerConvolution(conv1opts);
 
 pool1opts.sizeimg = conv1info.sizeimg;
@@ -24,6 +25,7 @@ conv2opts.sizestride = 1;
 conv2opts.numfilter = 32;
 conv2opts.numchan = pool1info.numchan;
 conv2opts.activation = 'relu';
+conv2opts.initW = 1e-2;
 [conv2, conv2info] = getLayerConvolution(conv2opts);
 
 pool2opts.sizeimg = conv2info.sizeimg;
@@ -41,6 +43,7 @@ conv3opts.sizestride = 1;
 conv3opts.numfilter = 64;
 conv3opts.numchan = pool2info.numchan;
 conv3opts.activation = 'relu';
+conv3opts.initW = 1e-2;
 [conv3, conv3info] = getLayerConvolution(conv3opts);
 % 
 pool3opts.sizeimg = conv3info.sizeimg;
@@ -56,20 +59,21 @@ L{end+1} = padlayer1;
 L{end+1} = conv1;
 L{end+1} = pool1;
 
-% L{end+1} = padlayer2;
-% L{end+1} = conv2;
-% L{end+1} = pool2;
+L{end+1} = padlayer2;
+L{end+1} = conv2;
+L{end+1} = pool2;
 % 
-% L{end+1} = padlayer3;
-% L{end+1} = conv3;
-% L{end+1} = pool3;
+L{end+1} = padlayer3;
+L{end+1} = conv3;
+L{end+1} = pool3;
 
 numhid = 64;
-L{end+1} = LayerLinear(pool1info.numout, numhid);
+initopts.initW = 1e-1;
+L{end+1} = LayerLinear(pool3info.numout, numhid, initopts);
 L{end+1} = LayerActivation(numhid, 'relu');
 
 numclass = 10;
-L{end+1} = LayerLinear(numhid, numclass);
+L{end+1} = LayerLinear(numhid, numclass, initopts);
 L{end+1} = LayerActivation(numclass, 'logsoftmax');
 
 alexnn26 = LayersSerial(L{:});

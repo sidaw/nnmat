@@ -5,7 +5,7 @@ if nargin < 6
     funcStat = @(x) '';
 end
 
-mom = 0.9;
+mom = options.mom;
 eta = options.eta;
 w = W;
 numdata = size(X,2);

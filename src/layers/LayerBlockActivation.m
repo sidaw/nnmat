@@ -35,7 +35,8 @@ methods
     end
 
     function output = forward(self, input)
-      self.input_reshape = reshape(input, self.blocksize, []);
+      inputandbias = bsxfun(@plus, input, self.params);
+      self.input_reshape = reshape(inputandbias, self.blocksize, []);
       
       output_reshape = self.actfunc(self.input_reshape);
       self.output_reshape = output_reshape;

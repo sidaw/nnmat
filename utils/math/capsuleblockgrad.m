@@ -1,5 +1,5 @@
 function dfdin = capsuleblockgrad(X, Y, dfdo)
-colsq = sum(X.*X,2);
+colsq = sum(X.*X,1);
 colnorm = sqrt(colsq);
 
 s = colnorm ./ (1+colsq);

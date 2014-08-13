@@ -1,4 +1,4 @@
-sizebatch = 2;
+sizebatch = 4;
 optsloss.lambdaL2 = 0;
 
 options.DerivativeCheck = 1;
@@ -7,7 +7,7 @@ options.MaxIter = 50;
 options.eta = 1e-4;
 options.PermuteData = 0;
 
-
+if 0
 %% check image2patch
 numchan = 3;
 imsize = [10, 10];
@@ -16,8 +16,8 @@ datagenlayer = LayerGenerateFakeData([prod(imsize)*numchan, sizebatch]);
 % arguments are imsize, block, step, numchan, options
 testedlayer = LayerImage2Patch(imsize, [3,3], 2, 3);
 nn = LayersSerial(datagenlayer, testedlayer);
-
 y = randn(testedlayer.dimpatch * testedlayer.numchan, testedlayer.numpatch, sizebatch);
+
 batchlossfunc = @(theta) BatchLossFunction(theta, 0, y, nn, 'gradcheckloss', optsloss);
 theta0 = nn.getparams();
 paramsopt = minFunc(batchlossfunc, theta0, options);
@@ -31,6 +31,7 @@ testedlayer = LayerPatches(numin, numout, numpatch);
 nn = LayersSerial(datagenlayer, testedlayer);
 
 y = randn(numout, numpatch, sizebatch);
+
 batchlossfunc = @(theta) BatchLossFunction(theta, 0, y, nn, 'gradcheckloss', optsloss);
 theta0 = nn.getparams();
 paramsopt = minFunc(batchlossfunc, theta0, options);
@@ -102,6 +103,21 @@ testedlayer = LayerPadImage(imsize, padsize, numchan);
 nn = LayersSerial(datagenlayer, testedlayer);
 
 y = randn(prod(testedlayer.totalsize)*numchan, sizebatch);
+batchlossfunc = @(theta) BatchLossFunction(theta, 0, y, nn, 'gradcheckloss', optsloss);
+theta0 = nn.getparams();
+paramsopt = minFunc(batchlossfunc, theta0, options);
+end 
+
+%% check block activation layer
+actname = 'nothing'% 'capsulev2';
+numhid = 25;
+blocksize = 5;
+datagenlayer = LayerGenerateFakeData([numhid, sizebatch]);
+% LayerBlockActivation(numin, actname, blocksize, options)
+testedlayer = LayerBlockActivation(numhid, actname, blocksize)
+nn = LayersSerial(datagenlayer, testedlayer);
+
+y = randn(numhid, sizebatch);
 batchlossfunc = @(theta) BatchLossFunction(theta, 0, y, nn, 'gradcheckloss', optsloss);
 theta0 = nn.getparams();
 paramsopt = minFunc(batchlossfunc, theta0, options);
