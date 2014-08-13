@@ -33,6 +33,11 @@ switch name
         actfunc = @logsoftmax;
         gradfunc = @(x,y,dfdo) (dfdo - bsxfun(@times, exp(y), sum(dfdo, 1)));
         % if the next layer is NLL, dfdo is just a 1-of-k encoding of the label
+    
+    case 'failgrad'
+        actfunc = @(x) x;
+        gradfunc = @(x,y,dfdo) dfdo*0.99;
+        % if the next layer is NLL, dfdo is just a 1-of-k encoding of the label
         
     otherwise
         actfunc = @(x) x;

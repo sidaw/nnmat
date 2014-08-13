@@ -9,9 +9,9 @@ methods
     function L = LayersSerial(varargin)
       if length(varargin) == 1
           warning('No need to use LayersSerial if it only contains one element.')
-          if iscell(varagin{1})
+          if iscell(varargin{1})
               warning(' You might have forgotten to flatten the array with {:}')
-              varargin = varagin{1};
+              varargin = varargin{1};
           end
       end
       

@@ -31,10 +31,16 @@ else
     fprintf('Just checking 100 fixed gradients out of %d\n', p)
     interval = floor(p/100);
     l = length(p);
-    listtocheck = [1:50,p-50:p];
+    
+    fprintf(' checking 100 fixed gradients out of %d\n', p)
+    interval = floor(p/100);
+    randomlist = randi(p,[1,100]);
+    fprintf('checking 100 random gradients out of %d\n', p)
+    listtocheck = [randomlist [1:50,p-50:p]];
+
 	g = g(listtocheck);
 	fprintf('Checking Gradient...\n');
-	[f2,g2] = autoGrad(x,type,funObj,varargin{:});
+	[f2,g2] = autoGrad(x,listtocheck, type,funObj,varargin{:});
     
 	
 	fprintf('Max difference between user and numerical gradient: %e\n',max(abs(g-g2)));

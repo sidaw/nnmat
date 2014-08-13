@@ -28,7 +28,9 @@ methods
     end
 
     function setparams(self, X)
-      self.params = reshape(X, size(self.params));
+      if all(size(self.params) > 0)
+        self.params = reshape(X, size(self.params));
+      end
     end
 
     function [grad] = getgrad(self)

@@ -40,7 +40,8 @@ classdef LayerImage2Patch < LayerBase
             [imgsizebynumchan, sizebatch] = size(input); %#ok<ASGLU>
             inputchanbybatch = reshape(input, prod(self.imsize), self.numchan*sizebatch);
             
-            output = reshape(inputchanbybatch(self.flatblockindices, :), self.dimpatch, self.numpatch, self.numchan, sizebatch);
+            output = inputchanbybatch(self.flatblockindices, :);
+            output = reshape(output, self.dimpatch, self.numpatch, self.numchan, sizebatch);
             output = permute(output, [1, 3, 2, 4]);
             output = reshape(output, self.dimpatch * self.numchan, self.numpatch, sizebatch);
         end

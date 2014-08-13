@@ -2,8 +2,13 @@ classdef LayerLinear < LayerBase
     % write a description of the class here.
     methods
         function L = LayerLinear(numin, numout, options)
+            if ~exist('options', 'var'); options.empty = 1; end
+            
+            initW = parseOption(options, 'initW', 1e-3);
+            
             L.name = 'Linear';
-            L.params = convertType( 0.01/sqrt(numin)*randn(numout, numin) );
+            
+            L.params = convertType( initW * randn(numout, numin) );
         end
         
         function output=forward(self, input)
