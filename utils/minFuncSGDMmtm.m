@@ -5,7 +5,8 @@ if nargin < 6
     funcStat = @(x) '';
 end
 
-mom = options.mom;
+mom = parseOption(options, 'mom', 0.5);
+
 eta = options.eta;
 w = W;
 numdata = size(X,2);
