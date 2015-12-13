@@ -52,7 +52,7 @@ Run this again:
 testconvextrain; plotObjectivePermute
 ```
 
-I got the [sigmoid figure](src/plots/sigmoid.pdf) vs. [the relu figure](src/plots/relu.pdf).
-The plot trace the objective function between the original network and a network with permuted hidden units. Let **L(s)** be the loss function, and *s* be the trained parameters. Let  **s'** be the parameter after permuting hidden units. We plotted **L(s t + s' (1-t))** for a bunch of random permutations for **t = -1 to 1**.
+The expected outputs are [the sigmoid figure](src/plots/sigmoid.pdf) vs. [the relu figure](src/plots/relu.pdf).
+The loss function between is plotted for parameters "in between" the original neural net and another neural net with permuted hidden units. Let **L(s)** be the loss function, and *s* be the trained parameters of the original net. Let  **s'** be the parameter after permuting hidden units. We plotted **L(s t + s' (1-t))** for a bunch of random permutations vs. **t in [-1, 1]**.
 
 
