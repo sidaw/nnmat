@@ -1,7 +1,7 @@
 # nnmat
 
 Just an experimental deep learning library in object oriented matlab.
-To run a 2 hidden layers network with dropout on mnist, you simply needs the following:
+To run a 2 hidden layers network with dropout on mnist, you simply need the following:
 
 ```matlab
 dimdata =  784;
@@ -22,38 +22,37 @@ L{end+1} = LayerActivation(numclass, 'logsoftmax');
 nn = LayersSerial(L{:});
 ```
 
-The data should be in a matrix of datadim by numhid. See test/testmnist for the whole thing.
-nnmat more or less followed the torch/nn design, and can run on gpu if set up correctly.
+The data should be in a matrix of datadim by numhid. See src/tests/testconvextrain.m or src/tests/testmnist.m for the whole thing.
+nnmat followed the torch/nn style of design, and can run on gpu if set up correctly.
 
 ## how to run
-
-go to scr
-
+```matlab
+cd scr
 initnnmat
 testconvextrain
-
+```
 or look at any of these testX.m
 
 ## sigmoid vs. relu
 
 It appears that relu and sigmoid units can make a big difference. This is well-known but poorly understood.
 Try:
-
-initnnmat
-
-testconvextrain; plotObjectivePermute
-
-Then comment out the sigmoid layer and uncomment the relu line.
+```matlab
+initnnmat;testconvextrain; plotObjectivePermute
+```
+Comment out the sigmoid layer and uncomment the relu line
 
 ```matlab
 L{end+1} = LayerActivation(numhid, 'sigmoid');
 %L{end+1} = LayerActivation(numhid, 'relu');
 ```
 
-Run this again: testconvextrain; plotObjectivePermute
+Run this again: 
+```matlab
+testconvextrain; plotObjectivePermute
+```
 
-I got the [sigmoid figure](src/plots/sigmoid.pdf) vs. [the relu figure](src/plots/relu.pdf), and interested in an explaination why they are so different.
-
+I got the [sigmoid figure](src/plots/sigmoid.pdf) vs. [the relu figure](src/plots/relu.pdf).
 The plot trace the objective function between the original network and a network with permuted hidden units. Let **L(s)** be the loss function, and *s* be the trained parameters. Let  **s'** be the parameter after permuting hidden units. We plotted **L(s t + s' (1-t))** for a bunch of random permutations for **t = -1 to 1**.
 
 
