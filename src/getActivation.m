@@ -19,6 +19,13 @@ switch name
     case 'square'
         actfunc = @(x) x.^2;
         gradfunc = @(x,y,dfdo) 2*x.*dfdo;
+    case 'softplus'
+        actfunc = @(x) log(1+exp(x));
+        gradfunc = @(x,y,dfdo) exp(x)./(1+exp(x)).*dfdo;
+    case 'reluthres'
+        actfunc = @(x) min(1,max(0,x));
+        gradfunc = @(x,y,dfdo) ((x<1) .* (x>0))*1.*dfdo;
+
     case 'none'
         actfunc = @(x) x;
         gradfunc = @(x,y,dfdo) dfdo;

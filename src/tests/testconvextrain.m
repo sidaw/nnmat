@@ -1,9 +1,9 @@
 addpath(genpath('../utils'))
 
-datapath = '~/data/mnisty/';
-load([datapath 'mnist.mat'])
+datapath = 'data/';
+load([datapath 'mnist200.mat'])
 
-if ~testToolboxes('Parallel Computing Toolbox')
+if 1
     castfunc = @(x) double(x);
     disp('No parallel computing toolbox')
 else
@@ -13,9 +13,8 @@ end
 
 
 dimdata =  784;
-numhid = 100;
+numhid = 10;
 numclass = 10;
-numdata = 1000;
 numhid2 = 800;
 
 L = {};
@@ -29,6 +28,8 @@ L{end+1} = LayerActivation(numhid, 'sigmoid');
 L{end+1} = LayerLinear(numhid, numclass);
 L{end+1} = LayerActivation(numclass, 'logsoftmax');
 nn = LayersSerial(L{:});
+
+numdata = 200;
 
 X = castfunc(X(1:dimdata, 1:numdata));
 y = castfunc(y(:, 1:numdata));

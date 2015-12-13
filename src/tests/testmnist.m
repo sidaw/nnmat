@@ -6,7 +6,6 @@ load([datapath 'mnist.mat'])
 dimdata =  784;
 numhid = 1024;
 numclass = 10;
-numdata = 60000;
 numhid2 = 1024;
 
 L = {};
@@ -20,6 +19,8 @@ L{end+1} = LayerNoising(0.5);
 L{end+1} = LayerLinear(numhid2, numclass);
 L{end+1} = LayerActivation(numclass, 'logsoftmax');
 nn = LayersSerial(L{:});
+
+numdata = 60000;
 
 X = X(1:dimdata, 1:numdata);
 
